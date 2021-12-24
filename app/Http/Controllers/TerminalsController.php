@@ -13,12 +13,18 @@ class TerminalsController extends Controller
         $size=$request->size ? $request->size : 20;
         
         $terminals = DB::table("sensor_estaciones_out")->where("id_movil", $request->id_movil)->paginate($size);
+
         return ApiResponseController::respond(200, 'Success', $terminals);
     }
 
     public function getTerminalsList()
     {
-        $terminalsList = DB::table("sensor_estaciones_out")->select("id_movil")->groupBy('id_movil')->get();
+        $terminalsList = DB::table("sensor_estaciones_out")
+        ->select("id_movil")
+        ->where("id_movil", 'SOP')
+        ->orWhere("id_movil", 'KCL')
+        
+        ->groupBy('id_movil')->get();
 
         return ApiResponseController::respond(200, 'Success', $terminalsList);
     }
